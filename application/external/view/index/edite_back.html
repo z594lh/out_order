@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑录入</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/js/jquery-1.8.2.js"></script>
+    <script src="/layui/layui.js"></script>
+    <style>
+        .layui-form {
+            padding-left: 3%;
+        }
+        .required{
+            color: red;
+            white-space: nowrap;
+        }
+        .img-avatar {
+            width: 50px;
+            height: 50px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layui-form-pane _form " action="" data_id = {$data_id}>
+    <blockquote class="layui-elem-quote _add">+</blockquote>
+    <div class="group_list">
+
+        <div class="layui-menu-item-group">
+<!--            <div class="layui-row layui-col-space10">-->
+                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>下单选择</label>
+                    <div class="layui-input-inline">
+                        <select name="interest" lay-filter="aihao">
+                            <option value="0">请选择</option>
+                            <option value="1" selected>下单</option>
+                            <option value="2">无法下单</option>
+                        </select>
+                    </div>
+                </div>
+<!--            </div>-->
+
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"><label class="layui-form-label"> <span class="required">*</span>采购邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="purchase_email" lay-verify="email" autocomplete="off" placeholder="请输入采购邮箱" value="" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>WAL订单号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="new_orders_id" autocomplete="off" placeholder="请输入WAL订单号" value="" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>实付金额</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="total_amount" lay-verify="money" autocomplete="off" placeholder="请输入实付金额" value="" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>下单数量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="item_count"  autocomplete="off" placeholder="请输入实付金额" value="" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md5">
+                    <div class="layui-form-item">
+                        <div class="layui-inline"> <label class="layui-form-label" style="width: 118px">预计到货日期</label>
+                            <div class="layui-input-block" style="margin-left: 118px;">
+                                <input type="text" name="arrival_date" id="arrival_date" autocomplete="off" value="" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"> <label class="layui-form-label">追踪号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ship_code" autocomplete="off" placeholder="请输入追踪号" value="" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"> <label class="layui-form-label">采购状态</label>
+                        <div class="layui-input-block">
+
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn uploadImage" id="uploadImage" data_id = "2" >上传图片</button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img img-avatar" id="imagePreview" src="">
+
+                                    <p id="imageText"></p>
+                                </div>
+                                <input type="hidden" id="imagePath" name="purchase_status" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md5">
+                    <div class="layui-form-item"> <label class="layui-form-label">WAL物流</label>
+                        <div class="layui-input-block">
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="uploadImage2">上传图片</button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img img-avatar" id="imagePreview2" src="">
+                                    <p id="imageText2"></p>
+                                </div>
+                                <input type="hidden" id="imagePath2" name="wal_logistics" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text"> <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea"  name="purchaser_remark" ></textarea>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <!--        <button class="layui-btn" lay-submit="" lay-filter="demo1">修改</button>-->
+        <button class="layui-btn" style="margin-left: 45%;" lay-submit="" lay-filter="demo2">提交</button>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['form', 'laydate','upload'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#arrival_date'
+        });
+
+        //自定义表单验证规则
+        form.verify({
+            email: function(value){
+                if(value && !/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test(value)){
+                    return '请输入正确的邮箱地址';
+                }
+            },
+            money: function(value, item) { // value：表单的值，item：表单的DOM对象
+                if (value && !/^\d+(\.\d{1,2})?$/.test(value)) {
+                    return '请输入正确的金钱格式';
+                }
+            }
+        });
+
+        form.on('submit(demo2)', function(data){
+
+            /*获取操作的id*/
+            var data_id = $('._form').attr('data_id');
+
+            if(data.field.interest == 0){
+                layer.msg('下单选择必填');
+                return false;
+            }
+            if(data.field.interest == '1' && (data.field.purchase_email=='' || data.field.new_orders_id=='' || data.field.total_amount=='' ) ){
+                layer.msg('<下单> 必填采购邮箱、WAL订单号、实付金额');
+                return false;
+            }
+
+            if(data.field.interest == '2' && data.field.purchaser_remark==''){
+                layer.msg('<无法下单> 必填备注');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                data:{
+                    'act':'submitInfo',
+                    'id':data_id,
+                    'data': JSON.stringify(data.field),
+                },
+                url: "{:url('external/index/editeInfo')}",
+                dataType: 'json',
+                success: function (rst) {
+                    console.log(rst);
+                    if(rst.status>0){
+                        layer.msg(rst.info);
+
+                    }else{
+                        layer.msg(rst.info);
+                    }
+
+                }
+            })
+
+            return false;
+        });
+
+        /*上传*/
+        var upload = layui.upload;
+        var img_http = '{$img_http}';
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: 'imagePreview', //绑定元素
+            url: img_http+'pic_upload.php', //上传接口
+            accept: 'images', //接收文件类型
+            exts: 'jpg|jpeg|png|bmp', //文件后缀
+            size: 1024 * 10, //文件大小限制
+            before: function(obj) {
+                obj.preview(function(index, file, result){
+                    $('#imagePreview').attr('src', result); //预览图片
+                    $('#imageText').html(file.name); //显示文件名
+                });
+            },
+            done: function(res){
+                if(res.status === 200){ //上传成功
+                    $('#imagePath').val(res.datas); //保存上传图片路径
+                    layer.msg('上传成功');
+                }else{ //上传失败
+                    layer.msg(res.msg, {icon: 2});
+                }
+            },
+            error: function(){
+                //请求异常回调
+                layer.msg('网络异常，请稍后重试', {icon: 2});
+            }
+        });
+
+
+        var uploadInst = upload.render({
+            elem: '#uploadImage2', //绑定元素
+            url: img_http+'pic_upload.php', //上传接口
+            accept: 'images', //接收文件类型
+            exts: 'jpg|jpeg|png|bmp', //文件后缀
+            size: 1024 * 10, //文件大小限制
+            before: function(obj) {
+                obj.preview(function(index, file, result){
+                    $('#imagePreview2').attr('src', result); //预览图片
+                    $('#imageText2').html(file.name); //显示文件名
+                });
+            },
+            done: function(res){
+                if(res.status === 200){ //上传成功
+                    $('#imagePath2').val(res.datas); //保存上传图片路径
+                    layer.msg('上传成功');
+                }else{ //上传失败
+                    layer.msg(res.msg, {icon: 2});
+                }
+            },
+            error: function(){
+                //请求异常回调
+                layer.msg('网络异常，请稍后重试', {icon: 2});
+            }
+        });
+
+
+    });
+
+</script>
+
+
+<script>
+    // 为img标签添加鼠标悬浮事件处理函数
+    $('body').on('mouseenter', '.img-avatar', function () {
+        // 获取图片的src和alt属性
+        var src = $(this).attr('src');
+        var alt = $(this).attr('alt');
+
+        // 创建一个新的img标签用于显示放大后的图片
+        var $img = $('<img>').attr({
+            src: src,
+            alt: alt
+        }).css({
+            maxWidth: '100%',
+            maxHeight: '100%',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            margin: 'auto',
+            zIndex: 9999
+        });
+
+        // 创建一个新的layer弹窗，并将$img插入其中
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            shadeClose: true,
+            area: ['auto', 'auto'],
+            content: $img.prop('outerHTML'),
+            success: function () {
+                // 在弹窗关闭时，删除$img标签
+                $('.layui-layer-close').click(function () {
+                    $img.remove();
+                });
+            }
+        });
+    });
+
+</script>
+
+
+</body>
+</html>

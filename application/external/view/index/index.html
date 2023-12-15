@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>外采订单</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/js/timeout.js"></script>
+    <script src="/js/jquery-1.8.2.js"></script>
+    <script src="/layui/layui.js"></script>
+
+    <style>
+        .layui-btn {
+            background-color:#3384c5
+        }
+        td[data-field=status][data-content='待下单']{
+            background-color: rgba(255, 241, 189, 0.76);
+        }
+        td[data-field=status][data-content='已下单'] {
+            background-color: green;
+            color: white;
+        }
+        td[data-field=status][data-content='已发货'] {
+            background-color: rgba(56, 29, 9, 0.12);
+            /*color: white;*/
+        }
+        td[data-field=status][data-content='无法下单'] {
+            background-color: red;
+            color: white;
+        }
+        td[data-field=status][data-content=DONE] {
+            background-color: #1ab394;
+            /*color: white;*/
+        }
+    </style>
+</head>
+<body>
+<table id="demo" lay-filter="test"></table>
+
+
+<script type="text/html" id="toolbarDemo">
+    <div class="demoTable">
+        订单号：
+        <div class="layui-inline">
+            <input class="layui-input" name="buyer_id" id="buyer_id" autocomplete="off">
+        </div>
+
+        排单状态：
+        <div class="layui-inline">
+            <select class="layui-btn" name = 'status' id = 'status'>
+                <option value="">请选择</option>
+                <option value="1" selected>待下单</option>
+                <option value="2">已下单</option>
+                <option value="3">已发货</option>
+                <option value="4">无法下单</option>
+            </select>
+        </div>
+
+        下单日期：
+        <div class="layui-inline">
+            <input type="text" name="date" id="date" class="layui-input">
+        </div>
+
+        <button class="layui-btn" lay-event="search"  id="search">搜索</button>
+        <button class="layui-btn" lay-event="export"  id="export">导出</button>
+        <a href="{:url('external/index/logout')}" class="logout" style="float: right;cursor:pointer;color: #01AAED;text-decoration:underline;">退出登录</a>
+    </div>
+
+</script>
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">+</a>
+</script>
+
+<script type="text/html" id="barDemo2">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edite">编辑</a>
+</script>
+
+<!--<script type="text/html" id="purchase_status">-->
+<!--    <img class="img-avatar" src="{{d.purchase_status}}" alt="" width="50">-->
+<!--</script>-->
+<!--<script type="text/html" id="wal_logistics">-->
+<!--    <img class="img-avatar" src="{{d.wal_logistics}}" alt="" width="50">-->
+<!--</script>-->
+
+<script>
+    // 为img标签添加鼠标悬浮事件处理函数
+    // $('body').on('mouseenter', '.img-avatar', function () {
+    //     // 获取图片的src和alt属性
+    //     var src = $(this).attr('src');
+    //     var alt = $(this).attr('alt');
+    //
+    //     // 创建一个新的img标签用于显示放大后的图片
+    //     var $img = $('<img>').attr({
+    //         src: src,
+    //         alt: alt
+    //     }).css({
+    //         maxWidth: '100%',
+    //         maxHeight: '100%',
+    //         position: 'fixed',
+    //         top: 0,
+    //         left: 0,
+    //         right: 0,
+    //         bottom: 0,
+    //         margin: 'auto',
+    //         zIndex: 9999
+    //     });
+    //
+    //     // 创建一个新的layer弹窗，并将$img插入其中
+    //     layer.open({
+    //         type: 1,
+    //         title: false,
+    //         closeBtn: 0,
+    //         shadeClose: true,
+    //         area: ['auto', 'auto'],
+    //         content: $img.prop('outerHTML'),
+    //         success: function () {
+    //             // 在弹窗关闭时，删除$img标签
+    //             $('.layui-layer-close').click(function () {
+    //                 $img.remove();
+    //             });
+    //         }
+    //     });
+    // });
+
+</script>
+
+<script>
+    var _page = 1;
+    var _limit = 20;
+    // 渲染表格
+    layui.use(['table', 'laydate'], function(){
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        /*表单渲染*/
+        table.render({
+            elem: '#demo',
+            url:"{:url('external/index/getOrderList')}",
+            toolbar: '#toolbarDemo', //开启头部工具栏，并为其绑定左侧模板
+            where: {
+                status: 1
+            },
+            cols: [[
+                {fixed: 'left',field:'status', title:'排单情况', width:100,templet: '#statusTpl'}
+                ,{fixed: 'left',field:'buyer_id', title:'订单号', width:150}
+                ,{field:'buyer_name', title:'姓名', width:150}
+                ,{field:'buyer_address_1', title:'地址1', width:200}
+                ,{field:'buyer_address_2', title:'地址2', width:100}
+                ,{field:'buyer_city', title:'城市', width:150}
+                ,{field:'buyer_state', title:'州', width:60}
+                ,{field:'buyer_zip', title:'邮编', width:120}
+                ,{field:'buyer_phone', title:'电话', width:150}
+                ,{field:'sales_remark', title:'备注', width:200}
+                ,{field:'unit_cost', title:'wal单价', width:80}
+                ,{field:'item_count', title:'需求数量', width:120}
+                ,{field:'purchase_link', title: 'wal链接', width:120, templet: function(d){
+                    if(d.purchase_link!=''){
+                        return '<a style="color: #1E9FFF" href="' + d.purchase_link + '" target="_blank">跳转链接</a>';
+                    }else{
+                        return '';
+                    }
+                }}
+                ,{field:'walmart_code', title:'wal编码', width:150}
+                ,{fixed: 'right',title: '编辑', templet: '#barDemo2', width: 80}
+            ]]
+            ,hideTool: ['filter', 'exports', 'print']
+            ,page: true
+            ,limit: 20
+            ,response: {
+                statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+            }
+            ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                _page = res.page;
+                _limit = res.limit;
+                return {
+                    "code": res.status, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.rows.item, //解析数据列表
+                    "page": res.page //解析数据列表
+                };
+            }
+            ,done: function() {
+                /*隐藏自带的工具栏*/
+                $(".layui-table-tool-self .layui-inline").eq(0).hide();
+                $(".layui-table-tool-self .layui-inline").eq(1).hide();
+                $(".layui-table-tool-self .layui-inline").eq(2).hide();
+            }
+        });
+
+        //监听行工具事件
+        /*编辑 详情*/
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            // console.log(obj);
+            if(obj.event === 'edite'){
+                layer.open({
+                    title: '编辑录入:'+data.buyer_id,
+                    type: 2,
+                    content: "{:url('external/index/edite')}?data_id=" + data.id,
+                    area: ['60%', '80%'], // 设置新页面的宽度和高度
+                    maxmin: true, // 允许最大化和最小化
+                    end: function() {
+                        // 子窗口关闭后的回调函数
+                        var arr = {
+                            buyer_id:$('#buyer_id').val(),
+                            status:$('#status').val(),
+                            date:$('#date').val()
+                        };
+                        reloadTable(_page,laydate,arr);
+                    }
+                });
+
+            }
+        });
+        //工具栏事件
+        /*搜索框*/
+        table.on('toolbar(test)', function(obj){
+            switch(obj.event){
+                case 'search':
+                    var buyer_id = $('#buyer_id').val();
+                    var status = $('#status').val();
+                    var date = $('#date').val();
+                    table.reload('demo', {
+                        url:"{:url('external/index/getOrderList')}",
+                        toolbar: '#toolbarDemo',
+                        where: {
+                            buyer_id: buyer_id,
+                            status: status,
+                            date: date
+                        },
+                        page: {
+                            curr: 1
+                        },
+                        done: function (res) {
+                            /*重新加载日期插件*/
+                            laydate.render({
+                                elem: '#date',
+                                type: 'date',
+                                format: 'yyyy-MM-dd',
+                                range: true
+                            });
+                            /*隐藏自带的工具栏*/
+                            $(".layui-table-tool-self .layui-inline").eq(0).hide();
+                            $(".layui-table-tool-self .layui-inline").eq(1).hide();
+                            $(".layui-table-tool-self .layui-inline").eq(2).hide();
+                        }
+                    });
+                    $('#status').val(status);
+                    $('#buyer_id').val(buyer_id);
+                    $('#date').val(date);
+                    break;
+                case 'export':
+                    var buyer_id = $('#buyer_id').val();
+                    var status = $('#status').val();
+                    var date = $('#date').val();
+                    window.location.href = "{:url('external/index/export')}?buyer_id="+buyer_id+"&status="+status+"&date="+date+"&page="+_page+"&limit="+_limit;
+                    break;
+            };
+        });
+
+        laydate.render({
+            elem: '#date',
+            type: 'date',
+            format: 'yyyy-MM-dd',
+            range: true
+        });
+    });
+
+
+    function reloadTable(_page,laydate,arr) {
+        // 获取数据表格实例
+        var tableIns = layui.table;
+        // 重新加载数据表格
+        tableIns.reload('demo', {
+            page: {
+                curr: _page // 重新从第一页开始显示数据
+            }
+        });
+        laydate.render({
+            elem: '#date',
+            type: 'date',
+            format: 'yyyy-MM-dd',
+            range: true
+        });
+        $('#status').val(arr['status']);
+        $('#buyer_id').val(arr['buyer_id']);
+        $('#date').val(arr['date']);
+    }
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑录入</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/js/jquery-1.8.2.js"></script>
+    <script src="/layui/layui.js"></script>
+    <style>
+        .layui-form {
+            padding-left: 3%;
+        }
+        .required{
+            color: red;
+            white-space: nowrap;
+        }
+        ._show {
+            width: 50px;
+            height: 50px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layui-form-pane _form " action="" data_id = {$data_id}>
+    <div style="margin-top: 10px;margin-bottom: 10px;position:fixed;right: 5%">
+        <i class="layui-icon layui-icon-addition _add" style="font-size:25px;cursor:pointer;z-index: 999"></i>
+    </div>
+    <div class="group_list">
+
+    </div>
+
+</div>
+
+
+<script>
+    var inithtml = '';
+    inithtml+='    <blockquote class="layui-elem-quote layui-quote-nm" style="box-shadow: -2px 2px 5px 0px #4e6497;">';
+    inithtml+='    <div class="layui-menu-item-group layui-field-box" >';
+    inithtml+='        <div class="layui-row layui-col-space10" style="margin-top: 10px">';
+    inithtml+='             <div class="layui-col-md5">';
+    inithtml+='                 <div class="layui-form-item"><label class="layui-form-label"><span class="required">*</span>下单选择</label>';
+    inithtml+='                     <div class="layui-input-inline">';
+    inithtml+='                         <select class="interest" name="interest" lay-filter="selctOnchange">';
+    inithtml+='                             <option value="0">请选择</option>';
+    inithtml+='                             <option value="1" selected>下单</option>';
+    inithtml+='                             <option value="2">无法下单</option>';
+    inithtml+='                         </select>';
+    inithtml+='                     </div>';
+    inithtml+='                 </div>';
+    inithtml+='            </div>';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <span style="float: right"><i class="layui-icon layui-icon-delete _del" style="font-size:25px;color: red;cursor:pointer;"></i></span>'
+    inithtml+='            </div>';
+    inithtml+='        </div>';
+    inithtml+='        <div class="layui-row layui-col-space10">';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item"><label class="layui-form-label"> <span class="required">*</span>采购邮箱</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <input type="text" name="purchase_email"  autocomplete="off" placeholder="请输入采购邮箱" value="" class="layui-input purchase_email">';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>WAL订单号</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <input type="text" name="new_orders_id" autocomplete="off" placeholder="请输入WAL订单号" value="" class="layui-input new_orders_id">';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='        </div>';
+    inithtml+='        <div class="layui-row layui-col-space10">';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>实付金额</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <input type="text" name="total_amount"  autocomplete="off" placeholder="请输入实付金额" value="" class="layui-input total_amount">';
+    inithtml+='                    </div>';
+    inithtml+='                 </div>';
+    inithtml+='            </div>';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>下单数量</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <input type="text" name="item_count"  autocomplete="off" placeholder="下单数量" value="" class="layui-input item_count">';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='        </div>';
+    inithtml+='        <div class="layui-row layui-col-space10">';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item">';
+    inithtml+='                    <div class="layui-inline"> <label class="layui-form-label" style="width: 118px">预计到货日期</label>';
+    inithtml+='                        <div class="layui-input-block" style="margin-left: 118px;">';
+    inithtml+='                            <input type="text" name="arrival_date" autocomplete="off" value="" class="layui-input arrival_date">';
+    inithtml+='                        </div>';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item"> <label class="layui-form-label">追踪号</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <input type="text" name="ship_code" autocomplete="off" placeholder="请输入追踪号" value="" class="layui-input ship_code">';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='        </div>';
+    inithtml+='        <div class="layui-row layui-col-space10">';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item dd"> <label class="layui-form-label">采购状态</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <div class="layui-upload">';
+    inithtml+='                            <button type="button" class="layui-btn uploadImage">上传图片</button>';
+    inithtml+='                            <div class="layui-upload-list">';
+    inithtml+='                                <img class="layui-upload-img img-avatar">';
+    inithtml+='                                <p></p>';
+    inithtml+='                            </div>';
+    inithtml+='                            <input type="hidden" name="purchase_status" class="purchase_status" value="">';
+    inithtml+='                        </div>';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='            <div class="layui-col-md5">';
+    inithtml+='                <div class="layui-form-item dd"> <label class="layui-form-label">WAL物流</label>';
+    inithtml+='                    <div class="layui-input-block">';
+    inithtml+='                        <div class="layui-upload">';
+    inithtml+='                            <button type="button" class="layui-btn uploadImage">上传图片</button>';
+    inithtml+='                            <div class="layui-upload-list">';
+    inithtml+='                                <img class="layui-upload-img img-avatar">';
+    inithtml+='                                <p ></p>';
+    inithtml+='                            </div>';
+    inithtml+='                            <input type="hidden" name="wal_logistics" class="wal_logistics" value="">';
+    inithtml+='                        </div>';
+    inithtml+='                    </div>';
+    inithtml+='                </div>';
+    inithtml+='            </div>';
+    inithtml+='        </div>';
+    inithtml+='        <div class="layui-form-item layui-form-text" style="width: 85%;"> <label class="layui-form-label">备注</label>';
+    inithtml+='            <div class="layui-input-block">';
+    inithtml+='                <textarea placeholder="请输入内容" class="layui-textarea purchaser_remark"  name="purchaser_remark" ></textarea>';
+    inithtml+='            </div>';
+    inithtml+='        </div>';
+    inithtml+='        <div class="layui-form-item">';
+    inithtml+='            <button class="layui-btn _submit" style="margin-left: 45%;" lay-submit="" lay-filter="tijiao1" data-index = "1" >提交</button>';
+    inithtml+='        </div>';
+    inithtml+='    </div>';
+    inithtml+='    </blockquote>';
+</script>
+
+<script>
+    $(function () {
+        var data_id = $('._form').attr('data_id');
+        var img_http = '{$img_http}';
+
+        $.ajax({
+            type: 'post',
+            data:{
+                'data_id':data_id
+            },
+            url: "{:url('external/index/getInfoForId')}",
+            dataType: 'json',
+            success: function (rst) {
+                if(rst[0].status == 6){
+                    $('._add').parent().hide();
+                }
+                $.each(rst, function(k,v){
+                    if(v.id2 > 0 ){
+                        var _html = '';
+                        _html+='    <blockquote class="layui-elem-quote layui-quote-nm" style="box-shadow: -2px 2px 5px 0px #4e6497;">';
+                        _html+='    <div class="layui-menu-item-group layui-field-box" data_id = '+v.id2+' >';
+                        _html+='        <div class="layui-row layui-col-space10" style="margin-top: 10px">';
+                        _html+='             <div class="layui-col-md5">';
+                        _html+='                 <div class="layui-form-item"><label class="layui-form-label"><span class="required">*</span>下单选择</label>';
+                        _html+='                     <div class="layui-input-inline">';
+                        _html+='                         <select class="interest" name="interest" lay-filter="selctOnchange">';
+                        _html+='                             <option value="0">请选择</option>';
+                        _html+='                             <option value="1" '+(v.interest=='1'?'selected':'')+'>下单</option>';
+                        _html+='                             <option value="2" '+(v.interest=='2'?'selected':'')+' >无法下单</option>';
+                        _html+='                         </select>';
+                        _html+='                     </div>';
+                        _html+='                 </div>';
+                        _html+='            </div>';
+                        _html+='            <div class="layui-col-md5" style="'+(v.status== 6?'display: none;':'')+'"  >';
+                        _html+='                <span style="float: right"><i class="layui-icon layui-icon-delete _del" style="font-size:25px;color: red;cursor:pointer;"></i></span>'
+                        _html+='            </div>';
+                        _html+='        </div>';
+                        _html+='        <div class="layui-row layui-col-space10">';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'">';
+                        _html+='                <div class="layui-form-item"><label class="layui-form-label"> <span class="required">*</span>采购邮箱</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <input type="text" name="purchase_email"  autocomplete="off" placeholder="请输入采购邮箱" value="'+v.purchase_email2+'" class="layui-input purchase_email">';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'" >';
+                        _html+='                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>WAL订单号</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <input type="text" name="new_orders_id" autocomplete="off" placeholder="请输入WAL订单号" value="'+v.new_orders_id2+'" class="layui-input new_orders_id">';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='        </div>';
+                        _html+='        <div class="layui-row layui-col-space10" >';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'" >';
+                        _html+='                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>实付金额</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <input type="text" name="total_amount"  autocomplete="off" placeholder="请输入实付金额" value="'+v.total_amount2+'" class="layui-input total_amount">';
+                        _html+='                    </div>';
+                        _html+='                 </div>';
+                        _html+='            </div>';
+                        _html+='            <div class="layui-col-md5">';
+                        _html+='                <div class="layui-form-item"> <label class="layui-form-label"><span class="required">*</span>下单数量</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <input type="text" name="item_count"  autocomplete="off" placeholder="下单数量" value="'+v.item_count2+'" class="layui-input item_count">';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='        </div>';
+                        _html+='        <div class="layui-row layui-col-space10">';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'" >';
+                        _html+='                <div class="layui-form-item">';
+                        _html+='                    <div class="layui-inline"> <label class="layui-form-label" style="width: 118px">预计到货日期</label>';
+                        _html+='                        <div class="layui-input-block" style="margin-left: 118px;">';
+                        _html+='                            <input type="text" name="arrival_date" autocomplete="off" value="'+v.arrival_date2+'" class="layui-input arrival_date">';
+                        _html+='                        </div>';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'" >';
+                        _html+='                <div class="layui-form-item"> <label class="layui-form-label">追踪号</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <input type="text" name="ship_code" autocomplete="off" placeholder="请输入追踪号" value="'+v.ship_code2+'" class="layui-input ship_code">';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='        </div>';
+                        _html+='        <div class="layui-row layui-col-space10">';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'" >';
+                        _html+='                <div class="layui-form-item dd"> <label class="layui-form-label">采购状态</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <div class="layui-upload">';
+                        _html+='                            <button type="button" style="'+(v.status==6?'display: none;':'')+'" class="layui-btn uploadImage">上传图片</button>';
+                        _html+='                            <div class="layui-upload-list">';
+                        _html+='                                <img class="layui-upload-img img-avatar '+(v.purchase_status2!=''?'_show':'')+'" '+(v.purchase_status2!=''?'src = '+img_http+v.purchase_status2:'')+' >';
+                        _html+='                                <p></p>';
+                        _html+='                            </div>';
+                        _html+='                            <input type="hidden" name="purchase_status" class="purchase_status" value="'+v.purchase_status2+'">';
+                        _html+='                        </div>';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='            <div class="layui-col-md5" style="'+(v.interest=='2'?'display: none;':'')+'" >';
+                        _html+='                <div class="layui-form-item dd"> <label class="layui-form-label">WAL物流</label>';
+                        _html+='                    <div class="layui-input-block">';
+                        _html+='                        <div class="layui-upload">';
+                        _html+='                            <button type="button" style="'+(v.status==6?'display: none;':'')+'" class="layui-btn uploadImage">上传图片</button>';
+                        _html+='                            <div class="layui-upload-list">';
+                        _html+='                                <img class="layui-upload-img img-avatar '+(v.wal_logistics2!=''?'_show':'')+'" '+(v.wal_logistics2!=''?'src = '+img_http+v.wal_logistics2:'')+' >';
+                        _html+='                                <p ></p>';
+                        _html+='                            </div>';
+                        _html+='                            <input type="hidden" name="wal_logistics" class="wal_logistics" value="'+v.wal_logistics2+'">';
+                        _html+='                        </div>';
+                        _html+='                    </div>';
+                        _html+='                </div>';
+                        _html+='            </div>';
+                        _html+='        </div>';
+                        _html+='        <div class="layui-form-item layui-form-text" style="width: 85%;"> <label class="layui-form-label">备注</label>';
+                        _html+='            <div class="layui-input-block">';
+                        _html+='                <textarea placeholder="请输入内容" class="layui-textarea purchaser_remark"  name="purchaser_remark" >'+v.purchaser_remark2+'</textarea>';
+                        _html+='            </div>';
+                        _html+='        </div>';
+                        _html+='        <div class="layui-form-item">';
+                        _html+='            <button class="layui-btn _submit '+(v.status==6?'layui-btn-disabled':'')+' " style="margin-left: 45%;" lay-submit="" lay-filter="tijiao1" data-index = "1" '+(v.status==6?'disabled = "true" ':'')+' >提交</button>';
+                        _html+='        </div>';
+                        _html+='    </div>';
+                        _html+='    </blockquote>';
+
+                        $('.group_list').append(_html);
+                    }
+                });
+                loadEvents(img_http);
+                checkList();
+
+            }
+        })
+
+
+        $('._add').on('click',function () {
+            $('.group_list').append(inithtml);
+            loadEvents(img_http);
+        })
+
+    })
+
+</script>
+<script src="/js/edite_purchase_orders.js"></script>
+</body>
+</html>
